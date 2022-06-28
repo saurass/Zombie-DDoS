@@ -1,4 +1,4 @@
-# Zombie-DDoS
+# Zombie-DDoS (Repared)
 Enhanced and made to work!
 
 ## FAQ
