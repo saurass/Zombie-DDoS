@@ -1,6 +1,6 @@
 <?php
 require_once "functions.php";
 
-echo getIterValue();
+echo htmlentities(getIterValue());
 
 ?>

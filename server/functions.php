@@ -1,17 +1,24 @@
 <?php
 
 $data_file = 'data.db';
-$data = file_get_contents($data_file);
+$opfile = fopen($data_file, "r");
+$datasz = filesize($data_file);
+if ($datasz > 0) {
+    $data = fread($opfile, $datasz);
+} else {
+    $data = json_encode(array());
+}
+fclose($opfile);
 
 function getAllData()
 {
-    $data = unserialize($GLOBALS['data']);
+    $data = json_decode($GLOBALS['data'], true);
     return $data;
 }
 
 function saveAllData($allData)
 {
-    $allData = serialize($allData);
+    $allData = json_encode($allData);
     file_put_contents($GLOBALS['data_file'], $allData);
 }
 
@@ -33,6 +40,9 @@ function getLiveBots()
     $all_bot_data = getBotsData();
 
     $flag = 0;
+    if ($GLOBALS['datasz'] < 1) {
+        return array();
+    }
     foreach($all_bot_data as $bot_id => $time) {
         if((time()-$time) >= 100)
             unset($all_bot_data[$bot_id]);
