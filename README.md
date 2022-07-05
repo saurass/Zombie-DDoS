@@ -12,15 +12,3 @@ And in windows you can download the pre-built binaries or download the original 
 ### This have changes with the original repo?
 
 Yes, and very obvious changes, at least now you can compile it!
-
-### Why?
-
-IDK
-
-### Why?
-
-IDK
-
-### Why?
-
-STOP, i'm bored, thank you for viewing this repo!
