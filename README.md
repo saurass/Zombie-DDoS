@@ -1,14 +1,9 @@
-# Zombie-DDoS (Repared)
-Enhanced and made to work!
+# Zombie DDoS
 
-## FAQ
+C++ Botnet based on a PHP C2
 
-### Where's libssl and libcrypto?
+You should only change the line referring to the C2 URL inside the main C++ source, the rest of project are ready-to-use
 
-In linux you can install OpenSSL-dev with your favourite package manager (if for some reason you port this source to linux)
+### The botnet itself isn't ready to use in public internet, only use it for testing purposes!
 
-And in windows you can download the pre-built binaries or download the original OpenSSL repo and build it from scratch (this gives you the static libs, if you build the source with this kind of libs ensure to remove the 2 lines mentioned there)
-
-### This have changes with the original repo?
-
-Yes, and very obvious changes, at least now you can compile it!
+Made for educational/testing purposes, i'm not aware of damages could make this thing.
