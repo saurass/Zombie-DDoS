@@ -5,7 +5,7 @@
 ?>
 
 <head>
-    <title>ZZamba</title>
+    <title>Zombie DDoS</title>
     <style>
         body {
             font-family: Calibri;
